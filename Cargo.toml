@@ -1,5 +1,5 @@
 [package]
-name = "compare-bibles-database-seeder"
+name = "cpw-db-seeder"
 version = "0.1.0"
 edition = "2024"
 
