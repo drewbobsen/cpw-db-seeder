@@ -1,0 +1,38 @@
+name: Build Release Binary
+
+# Run this workflow every time you push to the main branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # This ensures the binary is compiled natively for Linux, 
+    # making it perfectly compatible with your Ubuntu server.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      # Rust caches dependencies to make future builds significantly faster
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build Release Binary
+        # The --release flag applies aggressive optimizations to the compiled code
+        run: cargo build --release
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpw-db-seeder-linux
+          # This tells GitHub exactly where to find the finished file
+          path: target/release/cpw-db-seeder
+          # Keep the artifact available for 30 days
+          retention-days: 30
