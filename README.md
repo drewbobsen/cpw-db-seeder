@@ -6,7 +6,6 @@ By decoupling the data generation from the main application stack, this seeder p
 
 ## Features
 * **Extremely Fast Parsing:** Utilizes `quick-xml` to stream through large XML files with minimal memory overhead.
-* **Optimized SQL Output:** Wraps individual Bible translations in standard `BEGIN;` and `COMMIT;` SQL transaction blocks, drastically reducing disk write operations and slashing Postgres import times.
 * **Automated CI/CD:** Powered by GitHub Actions. Tagging a release automatically compiles the code, generates the `seed.sql` file, and attaches it as a downloadable release asset.
 
 ## Project Structure
