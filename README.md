@@ -18,3 +18,29 @@ cpw-db-seeder/
 ├── data/             # Output directory for the generated seed.sql
 ├── Cargo.toml
 └── .github/workflows/# CI/CD release pipeline
+```
+
+## Local Development
+
+**Prerequisites:**
+* Rust toolchain
+* Source XML files placed in ./text/en, from Repo [https://github.com/bzerangue/osis-bibles]
+
+**Running the Seeder:**
+TO compile and run the seeder locally, execute:
+```
+cargo run --release
+```
+
+Seeder will scan the etxt directory, parse the translations and output a ready-to-use seed.sql file in the ./data/ directory.
+
+##Production Usage
+
+You DO NOT need to run this binary on your produciton server. Instead, pull the pre-generated SQL directly from the GitHub Releases page into your database initialization folder:
+
+```
+wget [https://github.com/drewbobsen/cpw-db-seeder/releases/latest/download/seed.sql](https://github.com/drewbobsen/cpw-db-seeder/releases/latest/download/seed.sql) -O ./data/seed.sql
+```
+
+
+
