@@ -39,7 +39,7 @@ Seeder will scan the etxt directory, parse the translations and output a ready-t
 You DO NOT need to run this binary on your produciton server. Instead, pull the pre-generated SQL directly from the GitHub Releases page into your database initialization folder:
 
 ```
-wget [https://github.com/drewbobsen/cpw-db-seeder/releases/latest/download/seed.sql](https://github.com/drewbobsen/cpw-db-seeder/releases/latest/download/seed.sql) -O ./data/seed.sql
+wget https://github.com/drewbobsen/cpw-db-seeder/releases/latest/download/seed.sql -O ./data/seed.sql
 ```
 
 
