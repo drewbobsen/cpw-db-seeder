@@ -1,17 +1,14 @@
 name: Generate and Release SQL Seed
 
-# This triggers the workflow ONLY when you push a Git tag (e.g., v1.0.0)
 on:
   push:
     tags:
       - 'v*'
-  # Allows you to click a button in the GitHub UI to run it manually
   workflow_dispatch: 
 
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    # CRITICAL: This permission is required for the bot to create a Release
     permissions:
       contents: write 
 
@@ -26,13 +23,17 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Run Seeder to Generate SQL
-        # This compiles and runs your code, outputting ./data/seed.sql
         run: cargo run --release
+
+      # NEW: This will print the directory contents to the Action logs
+      - name: Verify SQL File Generation
+        run: |
+          echo "Checking if data directory and seed.sql exist..."
+          ls -lh data/
 
       - name: Create Release and Upload Artifact
         uses: softprops/action-gh-release@v2
         with:
-          # If triggered manually, it falls back to the branch name
           name: Database Seed ${{ github.ref_name }}
-          # Points directly to the file your Rust script just generated
-          files: ./data/seed.sql
+          # FIX: Removed the leading ./ so the glob matcher finds it perfectly
+          files: data/seed.sql
