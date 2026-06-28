@@ -1,38 +1,38 @@
-name: Build Release Binary
+name: Generate and Release SQL Seed
 
-# Run this workflow every time you push to the main branch
+# This triggers the workflow ONLY when you push a Git tag (e.g., v1.0.0)
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
+  # Allows you to click a button in the GitHub UI to run it manually
+  workflow_dispatch: 
 
 jobs:
-  build:
-    # This ensures the binary is compiled natively for Linux, 
-    # making it perfectly compatible with your Ubuntu server.
+  build-and-release:
     runs-on: ubuntu-latest
+    # CRITICAL: This permission is required for the bot to create a Release
+    permissions:
+      contents: write 
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
+      - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      # Rust caches dependencies to make future builds significantly faster
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
 
-      - name: Build Release Binary
-        # The --release flag applies aggressive optimizations to the compiled code
-        run: cargo build --release
+      - name: Run Seeder to Generate SQL
+        # This compiles and runs your code, outputting ./data/seed.sql
+        run: cargo run --release
 
-      - name: Upload Binary Artifact
-        uses: actions/upload-artifact@v4
+      - name: Create Release and Upload Artifact
+        uses: softprops/action-gh-release@v2
         with:
-          name: cpw-db-seeder-linux
-          # This tells GitHub exactly where to find the finished file
-          path: target/release/cpw-db-seeder
-          # Keep the artifact available for 30 days
-          retention-days: 30
+          # If triggered manually, it falls back to the branch name
+          name: Database Seed ${{ github.ref_name }}
+          # Points directly to the file your Rust script just generated
+          files: ./data/seed.sql

@@ -81,7 +81,7 @@ fn parse_and_write(
     let mut current_chapter: i32 = 0;
     let mut current_verse: i32 = 0;
     let mut in_verse = false;
-
+    writeln!(writer, "BEGIN;")?;
     loop {
         match reader.read_event_into(&mut buf) {
             Ok(Event::Start(ref e)) => {
@@ -117,6 +117,8 @@ fn parse_and_write(
                     let raw = String::from_utf8_lossy(e.as_ref());
                     let text = quick_xml::escape::unescape(&raw).unwrap_or_else(|_| raw.clone()).into_owned();
                     
+                    
+
                     if !title_saved && !translation_name.is_empty() {
                         // Escape single quotes for SQL insertion
                         let safe_name = translation_name.replace("'", "''");
@@ -131,6 +133,8 @@ fn parse_and_write(
                         title_saved = true;
                     }
 
+                    
+
                     // Escape single quotes in the verse text
                     let safe_text = text.replace("'", "''");
 
@@ -140,6 +144,7 @@ fn parse_and_write(
                         "INSERT INTO verses (translation_code, book, chapter, verse, text) VALUES ('{}', '{}', {}, {}, '{}') ON CONFLICT (translation_code, book, chapter, verse) DO UPDATE SET text = EXCLUDED.text;",
                         translation_code, current_book, current_chapter, current_verse, safe_text
                     )?;
+
                 }
             }
             Ok(Event::End(ref e)) => {
@@ -159,8 +164,9 @@ fn parse_and_write(
             }
             _ => (),
         }
+        
         buf.clear();
     }
-    
+    writeln!(writer, "BEGIN;")?;
     Ok(())
 }
