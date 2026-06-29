@@ -34,7 +34,7 @@ cargo run --release
 
 Seeder will scan the etxt directory, parse the translations and output a ready-to-use seed.sql file in the ./data/ directory.
 
-##Production Usage
+## Production Usage
 
 You DO NOT need to run this binary on your produciton server. Instead, pull the pre-generated SQL directly from the GitHub Releases page into your database initialization folder:
 
