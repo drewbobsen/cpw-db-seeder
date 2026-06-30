@@ -167,6 +167,6 @@ fn parse_and_write(
         
         buf.clear();
     }
-    writeln!(writer, "BEGIN;")?;
+    writeln!(writer, "COMMIT;")?;
     Ok(())
 }
